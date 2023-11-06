@@ -1,0 +1,13 @@
+C:\Users\brook\Documents\Workspaces\CSC 411\GitHub\arith\rpeg\target\debug\deps\qoi-4ea0986acca9fe9f.rmeta: C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src/lib.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\decode.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\encode.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\error.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\header.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\pixel.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\types.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\utils.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\consts.rs
+
+C:\Users\brook\Documents\Workspaces\CSC 411\GitHub\arith\rpeg\target\debug\deps\qoi-4ea0986acca9fe9f.d: C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src/lib.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\decode.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\encode.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\error.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\header.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\pixel.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\types.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\utils.rs C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\consts.rs
+
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src/lib.rs:
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\decode.rs:
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\encode.rs:
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\error.rs:
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\header.rs:
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\pixel.rs:
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\types.rs:
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\utils.rs:
+C:\Users\brook\.cargo\registry\src\index.crates.io-6f17d22bba15001f\qoi-0.4.1\src\consts.rs:
