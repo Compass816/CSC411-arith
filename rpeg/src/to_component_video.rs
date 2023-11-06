@@ -34,8 +34,9 @@ pub fn to_comp_vid(arr: &Array2<RgbF32>) -> Array2<RgbF32> {
         RgbF32Temp { red: y, green: pb, blue: pr }
     })
     .collect();
+    return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
+
 
 }
 
 
-    return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
