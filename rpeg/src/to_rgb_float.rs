@@ -20,7 +20,7 @@ impl fmt::Display for RgbF32 {
     }
 }
 
-fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
+pub fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
     let new_data: Vec<RgbF32> = arr
     .iter_row_major()
     .map(|(_, _, element)| {
