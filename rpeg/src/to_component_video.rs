@@ -23,9 +23,9 @@ impl fmt::Display for RgbF32 {
 pub fn to_comp_vid(arr: &Array2<RgbF32>) -> Array2<RgbF32> {
     let new_data: Vec<RgbF32Temp> = ben2.iter_row_major()
     .map(|(_, _, element)| {
-        let r = element.red as f32 / img.denominator as f32;
-        let g = element.green as f32 / img.denominator as f32;
-        let b = element.blue as f32 / img.denominator as f32;
+        let r = element.red;
+        let g = element.green;
+        let b = element.blue;
 
         let y = 0.299 * r + 0.587 * g + 0.114 * b;
         let pb = -0.168736 * r - 0.331264 * g + 0.5 * b;
