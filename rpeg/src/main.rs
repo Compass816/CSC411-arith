@@ -1,9 +1,3 @@
-use array2::Array2;
-use csc411_image::{Rgb, RgbImage};
-use std::env;
-use std::fmt;
-use std::process;
-
 use rpeg::codec::{compress, decompress};
 use std::env;
 
@@ -31,7 +25,7 @@ fn main() {
 
 
 
-    // This struc is for our temp type of f32s
+    /* This struc is for our temp type of f32s
     #[derive(Clone, Debug)]
     pub struct RgbF32Temp {
         red: f32,
@@ -46,7 +40,7 @@ fn main() {
                 self.red, self.green, self.blue
             )
         }
-    }
+    }*/
 
     // read in
     /*
@@ -71,10 +65,10 @@ fn main() {
     */
     // trim to even with function call
 
-    let ben = try_2.trim_to_even_dimensions();
+    //let ben = try_2.trim_to_even_dimensions();
 
     // here is the process for making the values f32s.
-    let new_data: Vec<RgbF32Temp> = ben
+    /*let new_data: Vec<RgbF32Temp> = ben
         .iter_row_major()
         .map(|(_, _, element)| {
             let r = element.red as f32 / img.denominator as f32;
@@ -92,7 +86,7 @@ fn main() {
 
     let ben2 = Array2::from_row_major(ben.width(), ben.height(), new_data).unwrap();
 
-    // testing to make sure dimensions function is working
+    // testing to make sure dimensions function is working*/
 
     println!("{}, {}", ben.width(), ben.height());
 

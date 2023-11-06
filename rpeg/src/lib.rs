@@ -1,4 +1,5 @@
 pub mod codec;
+pub mod to_rgb_float;
 
 use array2::Array2;
 use csc411_image::Rgb;
