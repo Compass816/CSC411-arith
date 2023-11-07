@@ -1,8 +1,7 @@
-use csc411_image::Rgb;
 use array2::Array2;
 use std::fmt;
 
-use crate::convertf32::RgbF32;
+use crate::to_rgb_float::RgbF32;
 
 // This struc is for our temp type of f32s
 #[derive(Clone, Debug)]
@@ -22,6 +21,23 @@ impl fmt::Display for YPbPr {
 
 }
 
+impl YPbPr {
+    pub fn new(y: f32, pb: f32, pr: f32) -> Self {
+        YPbPr { y, pb, pr }
+    }
+
+    pub fn y(&self) -> f32 {
+        self.y
+    }
+
+    pub fn pb(&self) -> f32 {
+        self.pb
+    }
+
+    pub fn pr(&self) -> f32 {
+        self.pr
+    }
+}
 
 pub fn to_ypbpr(arr: &Array2<RgbF32>) -> Array2<YPbPr> {
     let new_data: Vec<YPbPr> = arr

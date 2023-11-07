@@ -4,6 +4,7 @@ use array2::Array2;
 
 use crate::trim_to_even_dimensions;
 use crate::to_rgb_float::to_rgbf32;
+use crate::to_component_video::to_ypbpr;
 
 pub fn compress(filename: Option<&str>) {
     // Construct an Array2
@@ -19,6 +20,8 @@ pub fn compress(filename: Option<&str>) {
     // Convert pixels to a triplet of f32s
     let arr_f = to_rgbf32(&arr_trimmed);
 
+    // Convert to component video
+    let arr_cv = to_ypbpr(&arr_f);
 
 }
 
