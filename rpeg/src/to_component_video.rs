@@ -10,6 +10,7 @@ pub struct YPbPr {
     pb: f32,
     pr: f32,
 }
+
 impl fmt::Display for YPbPr {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
