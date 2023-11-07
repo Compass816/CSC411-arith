@@ -5,9 +5,9 @@ use std::fmt;
 // This struc is for our temp type of f32s
 #[derive(Clone, Debug)]
 pub struct RgbF32 {
-    red: f32,
-    green: f32,
-    blue: f32,
+    pub red: f32,
+    pub green: f32,
+    pub blue: f32,
 }
 
 impl fmt::Display for RgbF32 {
@@ -19,6 +19,9 @@ impl fmt::Display for RgbF32 {
         )
     }
 }
+
+
+
 
 impl RgbF32 {
     pub fn new(red: f32, green: f32, blue: f32) -> Self {
@@ -55,3 +58,7 @@ pub fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
 
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
+
+
+
+
