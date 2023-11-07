@@ -88,10 +88,5 @@ fn main() {
 
     // testing to make sure dimensions function is working*/
 
-    println!("{}, {}", ben.width(), ben.height());
-
-    // testing to see if float values are printed (they are)
-    for (x, y, element) in ben2.iter_row_major() {
-        println!("{}, {}, : {}", x, y, element);
-    }
 }
+
