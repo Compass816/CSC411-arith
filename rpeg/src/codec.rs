@@ -3,6 +3,9 @@ use csc411_image::{Rgb, RgbImage, Read};
 use array2::Array2;
 
 use crate::trim_to_even_dimensions;
+use crate::pack_2x2_pixels;
+use crate::average_pbpr;
+use crate::get_luminosity_coeffs;
 use crate::to_rgb_float::to_rgbf32;
 use crate::to_component_video::to_ypbpr;
 
@@ -22,6 +25,15 @@ pub fn compress(filename: Option<&str>) {
 
     // Convert to component video
     let arr_cv = to_ypbpr(&arr_f);
+    
+    println!("{}, {}", arr_cv.width(), arr_cv.height());
+
+    
+
+    // testing to see if float values are printed (they are)
+    for (x, y, element) in arr_cv.iter_row_major() {
+        println!("{}, {}, : {}", x, y, element);
+    }
 
 }
 
