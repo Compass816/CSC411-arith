@@ -54,7 +54,7 @@ pub fn pack_2x2_pixels(arr: &Array2<YPbPr>) {
 pub fn average_pbpr(group: [[&YPbPr; 2]; 2]) -> (usize, usize) {
     let pb_ave = (group[0][0].pb() + group[0][1].pb() + group[1][0].pb() + group[1][1].pb()) / 4 as f32;
     let pr_ave = (group[0][0].pr() + group[0][1].pr() + group[1][0].pr() + group[1][1].pr()) / 4 as f32;
-
+    
     (index_of_chroma(pb_ave), index_of_chroma(pr_ave))
 }
 
@@ -71,7 +71,9 @@ pub fn get_luminosity_coeffs(group: [[&YPbPr; 2]; 2]) -> (f32, f32, f32, f32) {
     let d = (y4 - y3 - y2 + y1) / 4.0;
 
     (a, b, c, d)
-
 }
 
 
+pub fn quantize_vals() {
+
+}

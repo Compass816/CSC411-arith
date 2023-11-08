@@ -28,7 +28,9 @@ pub fn compress(filename: Option<&str>) {
     
     println!("{}, {}", arr_cv.width(), arr_cv.height());
 
-    
+    // Group pixels 2x2, average Pb and Pr, discrete cosine on Ys, and group b, c, and d^c
+    // in progress
+
 
     // testing to see if float values are printed (they are)
     for (x, y, element) in arr_cv.iter_row_major() {
