@@ -8,6 +8,7 @@ use crate::average_pbpr;
 use crate::get_luminosity_coeffs;
 use crate::to_rgb_float::to_rgbf32;
 use crate::to_component_video::to_ypbpr;
+use crate::encode
 
 pub fn compress(filename: Option<&str>) {
     // Construct an Array2
@@ -28,8 +29,12 @@ pub fn compress(filename: Option<&str>) {
     
     println!("{}, {}", arr_cv.width(), arr_cv.height());
 
-    // Group pixels 2x2, average Pb and Pr, discrete cosine on Ys, and group b, c, and d^c
+    // Group pixels 2x2, average Pb and Pr, and perform the discrete cosine on Ys
     // in progress
+
+    // quantize step
+
+    // bitpack step
 
 
     // testing to see if float values are printed (they are)

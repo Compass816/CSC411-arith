@@ -87,6 +87,7 @@ impl<T: Clone> Array2<T> {
         assert!(y < self.height);
         &self.data[x + y * self.width]
     }
+
     pub fn get_mut(&mut self, x: usize, y: usize) -> &mut T {
         let index = x + y * self.width;
         &mut self.data[index]

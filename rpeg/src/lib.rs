@@ -1,6 +1,7 @@
 pub mod codec;
 pub mod to_rgb_float;
 pub mod to_component_video;
+pub mod quantize;
 
 use array2::Array2;
 use csc411_image::Rgb;
@@ -32,22 +33,39 @@ pub fn trim_to_even_dimensions(arr: &Array2<Rgb>) -> Array2<Rgb> {
     return Array2::from_row_major(new_width, new_height, new_data).unwrap();
 }
 
+/// TODO
+/// Returns: an Array2 of quantized values, a 6-tuple containing a, b, c, d, pb ave, and pr ave
+pub fn pack_2x2_pixels(arr: &Array2<YPbPr>) -> Array2<(f32, f32, f32, f32, usize, usize)>{
 
-pub fn pack_2x2_pixels(arr: &Array2<YPbPr>) {
+    let packed_arr = Array2::blank_state(arr.width()/2, arr.height()/2, (0,0, 0.0, 0.0, 0.0, 0, 0));
 
     // Loop invariant: arr will always have an even number of rows and cols
-    for y in 0..arr.height() {
-        for x in 0..arr.width() {
-            // Extract a 2x2 group of elements
-            let group = [
-                [arr.get(x, y), arr.get(x+1, y)], [arr.get(x, y+1), arr.get(x+1, y+1)]
-            ];
+    for (x, y, value) in iter_row_major_2x2(arr) {
+        let group: [[&YPbPr; 2]; 2] = [[arr.get(x, y), arr.get(x+1, y)], [arr.get(x, y+1), arr.get(x+1, y+1)]];
 
-            let chroma_vals = average_pbpr(group);
-            let luminosity_coeffs = get_luminosity_coeffs(group);
+        let chroma_vals = average_pbpr(group);
+        let luminosity_coeffs = get_luminosity_coeffs(group);
 
-        }
+        packed_arr.get_mut(x/2, y/2).0 = luminosity_coeffs.0;
+        packed_arr.get_mut(x/2, y/2).1 = luminosity_coeffs.1;
+        packed_arr.get_mut(x/2, y/2).2 = luminosity_coeffs.2;
+        packed_arr.get_mut(x/2, y/2).3 = luminosity_coeffs.3;
+        packed_arr.get_mut(x/2, y/2).4 = chroma_vals.0;
+        packed_arr.get_mut(x/2, y/2).5 = chroma_vals.1;
     }
+
+    return packed_arr;
+}
+
+
+pub fn iter_row_major_2x2<'a, T: Clone>(arr: &'a Array2<T>) -> impl Iterator<Item = (usize, usize, T)> + 'a {
+    (0..arr.height())
+        .step_by(2)
+        .flat_map(move |y| {
+            (0..arr.width())
+                .step_by(2)
+                .map(move |x| (x, y, arr.get(x, y).clone()))
+        })
 }
 
 
@@ -71,9 +89,4 @@ pub fn get_luminosity_coeffs(group: [[&YPbPr; 2]; 2]) -> (f32, f32, f32, f32) {
     let d = (y4 - y3 - y2 + y1) / 4.0;
 
     (a, b, c, d)
-}
-
-
-pub fn quantize_vals() {
-
 }
