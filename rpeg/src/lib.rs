@@ -37,7 +37,7 @@ pub fn trim_to_even_dimensions(arr: &Array2<Rgb>) -> Array2<Rgb> {
 /// Returns: an Array2 of quantized values, a 6-tuple containing a, b, c, d, pb ave, and pr ave
 pub fn pack_2x2_pixels(arr: &Array2<YPbPr>) -> Array2<(f32, f32, f32, f32, usize, usize)>{
 
-    let packed_arr = Array2::blank_state(arr.width()/2, arr.height()/2, (0,0, 0.0, 0.0, 0.0, 0, 0));
+    let mut packed_arr = Array2::blank_state(arr.width()/2, arr.height()/2, (0.0, 0.0, 0.0, 0.0, 0, 0));
 
     // Loop invariant: arr will always have an even number of rows and cols
     for (x, y, value) in iter_row_major_2x2(arr) {
