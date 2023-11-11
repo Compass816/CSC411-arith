@@ -8,7 +8,12 @@ use crate::average_pbpr;
 use crate::get_luminosity_coeffs;
 use crate::to_rgb_float::to_rgbf32;
 use crate::to_component_video::to_ypbpr;
-use crate::encode
+use crate::to_component_video::to_rgb;
+use crate::quantize::encode;
+use crate::quantize::scale_sat;
+use crate::quantize::smax;
+
+
 
 pub fn compress(filename: Option<&str>) {
     // Construct an Array2
@@ -27,23 +32,44 @@ pub fn compress(filename: Option<&str>) {
     // Convert to component video
     let arr_cv = to_ypbpr(&arr_f);
     
-    println!("{}, {}", arr_cv.width(), arr_cv.height());
+    //println!("{}, {}", arr_cv.width(), arr_cv.height());
 
-    // Group pixels 2x2, average Pb and Pr, and perform the discrete cosine on Ys
-    // in progress
-
-    // quantize step
-
-    // bitpack step
 
 
     // testing to see if float values are printed (they are)
-    for (x, y, element) in arr_cv.iter_row_major() {
-        println!("{}, {}, : {}", x, y, element);
+  
+
+   // let check3 = to_rgb(&arr_cv);
+  //  set array to 2x2 pixels and values we need 
+    let check4 = pack_2x2_pixels(&arr_cv);
+
+
+  
+
+  //  for (x, y, &ref element) in check3.iter_row_major() {
+ //       println!("{}, {}, : {:?}", x, y, element);
+//    }
+ //   for (x, y, &ref element) in check4.iter_row_major() {
+//           println!("{}, {}, : {:?}", x, y, element);
+    //   }
+
+    for (x, y, &ref element) in check4.iter_row_major() {
+
+           let mut modified_element = element.clone();
+
+           modified_element.0 = encode(element.0, 9, 0.3) as f32;
+           modified_element.1 = encode(element.1, 5, 0.3) as f32;
+           modified_element.2 = encode(element.2, 5, 0.3) as f32;
+           modified_element.3 = encode(element.3, 5, 0.3) as f32;
+        
+           println!("{}, {}, : {:?}", x, y, modified_element);
     }
 
+
+    
 }
 
 pub fn decompress(filename: Option<&str>) {
     todo!();
+
 }
