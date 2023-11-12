@@ -1,3 +1,5 @@
+use std::f32::consts::E;
+
 use csc411_image;
 use csc411_image::{Rgb, RgbImage, Read};
 use array2::Array2;
@@ -7,12 +9,9 @@ use crate::pack_2x2_pixels;
 use crate::average_pbpr;
 use crate::get_luminosity_coeffs;
 use crate::to_rgb_float::to_rgbf32;
-use crate::to_component_video::to_ypbpr;
-use crate::to_component_video::to_rgb;
-use crate::quantize::encode;
-use crate::quantize::scale_sat;
-use crate::quantize::smax;
-
+use crate::to_component_video::{to_ypbpr, to_rgb};
+use crate::quantize::{encode, scale_sat, smax};
+use crate::bitpack;
 
 
 pub fn compress(filename: Option<&str>) {
@@ -55,12 +54,12 @@ pub fn compress(filename: Option<&str>) {
 
     for (x, y, &ref element) in check4.iter_row_major() {
 
-           let mut modified_element = element.clone();
+           let qa = encode(element.0, 9, 0.3) as u32;
+           let qb = encode(element.1, 5, 0.3);
+           let qc = encode(element.2, 5, 0.3);
+           let qd = encode(element.3, 5, 0.3);
 
-           modified_element.0 = encode(element.0, 9, 0.3) as f32;
-           modified_element.1 = encode(element.1, 5, 0.3) as f32;
-           modified_element.2 = encode(element.2, 5, 0.3) as f32;
-           modified_element.3 = encode(element.3, 5, 0.3) as f32;
+           bitpack(qa, qb, qc, qd, element.4 as u32, element.5 as u32);
         
            println!("{}, {}, : {:?}", x, y, modified_element);
     }
@@ -73,3 +72,5 @@ pub fn decompress(filename: Option<&str>) {
     todo!();
 
 }
+
+

@@ -7,6 +7,7 @@ use array2::Array2;
 use csc411_image::Rgb;
 use to_component_video::YPbPr;
 use csc411_arith::index_of_chroma;
+use bitpack::bitpack::{fitss, fitsu, news, newu};
 
 pub fn trim_to_even_dimensions(arr: &Array2<Rgb>) -> Array2<Rgb> {
     let new_width = if arr.width() % 2 == 0 {
@@ -89,4 +90,65 @@ pub fn get_luminosity_coeffs(group: [[&YPbPr; 2]; 2]) -> (f32, f32, f32, f32) {
     let d = (y4 - y3 - y2 + y1) / 4.0;
 
     (a, b, c, d)
+}
+
+
+pub fn bitpack(a: u32, b: i32, c: i32, d: i32, pb: u32, pr: u32) -> Option<u32> {
+    let mut val: u64 = 0;
+
+    if fitsu(a as u64, 9) {
+        val = match newu(val, 9, 23, a as u64) {
+            Some(val) => val,
+            None => return None,
+        };
+    } else {
+        return None;
+    }
+
+    if fitss(b as i64, 5) {
+        val = match news(val, 5, 18, b as i64) {
+            Some(val) => val,
+            None => return None,
+        };
+    } else {
+        return None;
+    }
+
+    if fitss(c as i64, 5) {
+        val = match news(val, 5, 13, c as i64) {
+            Some(val) => val,
+            None => return None,
+        };
+    } else {
+        return None;
+    }
+
+    if fitss(d as i64, 5) {
+        val = match news(val, 5, 8, d as i64) {
+            Some(val) => val,
+            None => return None,
+        };
+    } else {
+        return None;
+    }
+
+    if fitsu(pb as u64, 4) {
+        val = match newu(val, 4, 4, pb as u64) {
+            Some(val) => val,
+            None => return None,
+        };
+    } else {
+        return None;
+    }
+
+    if fitsu(pr as u64, 4) {
+        val = match newu(val, 4, 0, pr as u64) {
+            Some(val) => val,
+            None => return None,
+        };
+    } else {
+        return None;
+    }
+
+    Some(val.try_into().unwrap())
 }
