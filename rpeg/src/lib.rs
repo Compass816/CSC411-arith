@@ -150,5 +150,5 @@ pub fn bitpack(a: u32, b: i32, c: i32, d: i32, pb: u32, pr: u32) -> Option<u32> 
         return None;
     }
 
-    Some(val.try_into().unwrap())
+    Some(val as u32)
 }
