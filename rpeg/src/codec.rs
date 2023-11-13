@@ -58,7 +58,7 @@ pub fn compress(filename: Option<&str>) {
     */
 
     let mut empty_vec = vec![];
-    for (x, y, &ref element) in check4.iter_row_major() {
+    for (_x, _y, &ref element) in check4.iter_row_major() {
         let qa = encode(element.0, 9, 0.3) as u32;
         let qb = encode(element.1, 5, 0.3);
         let qc = encode(element.2, 5, 0.3);
@@ -72,7 +72,7 @@ pub fn compress(filename: Option<&str>) {
 
     let compressed_data: Vec<[u8; 4]> = empty_vec.into_iter().map(u32::to_be_bytes).collect();
 
-    output_rpeg_data(&compressed_data, width as u32, height as u32);
+    debug_output_rpeg_data(&compressed_data, width as u32, height as u32);
 }
 
 

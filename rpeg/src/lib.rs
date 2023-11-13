@@ -42,7 +42,7 @@ pub fn pack_2x2_pixels(arr: &Array2<YPbPr>) -> Array2<(f32, f32, f32, f32, usize
     let mut packed_arr = Array2::blank_state(arr.width()/2, arr.height()/2, (0.0, 0.0, 0.0, 0.0, 0, 0));
 
     // Loop invariant: arr will always have an even number of rows and cols
-    for (x, y, value) in iter_row_major_2x2(arr) {
+    for (x, y, _value) in iter_row_major_2x2(arr) {
         let group: [[&YPbPr; 2]; 2] = [[arr.get(x, y), arr.get(x+1, y)], [arr.get(x, y+1), arr.get(x+1, y+1)]];
 
         let chroma_vals = average_pbpr(group);

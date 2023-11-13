@@ -1,5 +1,3 @@
-use std::fmt::Debug;
-
 pub struct Array2<T> {
     width: usize,
     height: usize,
