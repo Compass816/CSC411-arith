@@ -3,6 +3,7 @@ pub mod to_rgb_float;
 pub mod to_component_video;
 pub mod quantize;
 
+use std::io;
 use array2::Array2;
 use csc411_image::Rgb;
 use to_component_video::YPbPr;
