@@ -3,12 +3,11 @@ pub mod to_rgb_float;
 pub mod to_component_video;
 pub mod quantize;
 
-use std::io;
 use array2::Array2;
 use csc411_image::Rgb;
 use to_component_video::YPbPr;
-use csc411_arith::index_of_chroma;
-use bitpack::bitpack::{fitss, fitsu, news, newu};
+use csc411_arith::{index_of_chroma, chroma_of_index};
+use bitpack::bitpack::{fitss, fitsu, news, newu, gets, getu};
 
 pub fn trim_to_even_dimensions(arr: &Array2<Rgb>) -> Array2<Rgb> {
     let new_width = if arr.width() % 2 == 0 {
@@ -94,50 +93,54 @@ pub fn get_luminosity_coeffs(group: [[&YPbPr; 2]; 2]) -> (f32, f32, f32, f32) {
 }
 
 pub fn reverse_luminosity_coeffs(a: u32, b: i32, c: i32, d: i32) -> (u32, i32, i32, i32) {
-    let y1 = (a - b - c + d) as u32;
-    let y2 = (a - b + c - d) as i32;
-    let y3 = (a + b - c - d) as i32;
-    let y4 = (a + b + c + d) as i32;
+    let y1 = a - b as u32 - c as u32 + d as u32;
+    let y2 = a as u32 - b as u32 + c as u32 - d as u32;
+    let y3 = a as u32 + b as u32 - c as u32 - d as u32;
+    let y4 = a as u32 + b as u32 + c as u32 + d as u32;
 
-    (y1, y2, y3, y4)
+    (y1, y2 as i32, y3 as i32, y4 as i32)
 }
 
 
 pub fn unpack_bits(packed_value: u32) -> (u32, i32, i32, i32, u32, u32) {
-    let a = getu(packed_value, 9, 23) as u32;
-    let b = gets(packed_value, 5, 18) as i32;
-    let c = gets(packed_value, 5, 13) as i32;
-    let d = gets(packed_value, 5, 8) as i32;
-    let pb = getu(packed_value, 4, 4) as u32;
-    let pr = getu(packed_value, 4, 0) as u32;
+    let a = getu(packed_value as u64, 9, 23) as u32;
+    let b = gets(packed_value as u64, 5, 18) as i32;
+    let c = gets(packed_value as u64, 5, 13) as i32;
+    let d = gets(packed_value as u64, 5, 8) as i32;
+    let pb = getu(packed_value as u64, 4, 4) as u32;
+    let pr = getu(packed_value as u64, 4, 0) as u32;
 
     (a, b, c, d, pb, pr)
 }
 
 
-fn compute_cv_byte(byte: u8, position: u8) -> YPbPr {
+fn compute_cv_byte(bytes: [u8; 4], pos_x: usize, pos_y: usize) -> (f32, f32, f32) {
     // Read in bytes in big=endian order
-    let vals = unpack_bits(u32::from_be_bytes(byte));
+    let vals = unpack_bits(u32::from_be_bytes(bytes));
   
     let a = vals.0;
     let b = vals.1;
     let c = vals.2;
     let d = vals.3;
   
-    let pb_chroma = chroma_of_index(vals.4) as f32;
-    let pr_chroma = chroma_of_index(vals.5) as f32;
+    let pb_chroma = chroma_of_index(vals.4 as usize) as f32;
+    let pr_chroma = chroma_of_index(vals.5 as usize) as f32;
   
     let y = reverse_luminosity_coeffs(a, b, c, d);
     
-    let result = match position {
-        1 => (y.0, pb_chroma, pr_chroma),
-        2 => (y.1, pb_chroma, pr_chroma),
-        3 => (y.2, pb_chroma, pr_chroma),
-        4 => (y.3, pb_chroma, pr_chroma),
-        _ => None
+    let pixel_x = pos_x % 2;
+    let pixel_y = pos_y % 2;
+    let pixel_position = pixel_y * 2 + pixel_x;
+
+    let result = match pixel_position {
+        1 => (y.0 as f32, pb_chroma, pr_chroma),
+        2 => (y.1 as f32, pb_chroma, pr_chroma),
+        3 => (y.2 as f32, pb_chroma, pr_chroma),
+        4 => (y.3 as f32, pb_chroma, pr_chroma),
+        _ => (0.0, 0.0, 0.0),
     };
 
-    YPbPr(result as f32, pb, pr)
+    result
   }
 
 
