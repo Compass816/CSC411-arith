@@ -93,6 +93,53 @@ pub fn get_luminosity_coeffs(group: [[&YPbPr; 2]; 2]) -> (f32, f32, f32, f32) {
     (a, b, c, d)
 }
 
+pub fn reverse_luminosity_coeffs(a: u32, b: i32, c: i32, d: i32) -> (u32, i32, i32, i32) {
+    let y1 = (a - b - c + d) as u32;
+    let y2 = (a - b + c - d) as i32;
+    let y3 = (a + b - c - d) as i32;
+    let y4 = (a + b + c + d) as i32;
+
+    (y1, y2, y3, y4)
+}
+
+
+pub fn unpack_bits(packed_value: u32) -> (u32, i32, i32, i32, u32, u32) {
+    let a = getu(packed_value, 9, 23) as u32;
+    let b = gets(packed_value, 5, 18) as i32;
+    let c = gets(packed_value, 5, 13) as i32;
+    let d = gets(packed_value, 5, 8) as i32;
+    let pb = getu(packed_value, 4, 4) as u32;
+    let pr = getu(packed_value, 4, 0) as u32;
+
+    (a, b, c, d, pb, pr)
+}
+
+
+fn compute_cv_byte(byte: u8, position: u8) -> YPbPr {
+    // Read in bytes in big=endian order
+    let vals = unpack_bits(u32::from_be_bytes(byte));
+  
+    let a = vals.0;
+    let b = vals.1;
+    let c = vals.2;
+    let d = vals.3;
+  
+    let pb_chroma = chroma_of_index(vals.4) as f32;
+    let pr_chroma = chroma_of_index(vals.5) as f32;
+  
+    let y = reverse_luminosity_coeffs(a, b, c, d);
+    
+    let result = match position {
+        1 => (y.0, pb_chroma, pr_chroma),
+        2 => (y.1, pb_chroma, pr_chroma),
+        3 => (y.2, pb_chroma, pr_chroma),
+        4 => (y.3, pb_chroma, pr_chroma),
+        _ => None
+    };
+
+    YPbPr(result as f32, pb, pr)
+  }
+
 
 pub fn bitpack(a: u32, b: i32, c: i32, d: i32, pb: u32, pr: u32) -> Option<u32> {
     let mut val: u64 = 0;

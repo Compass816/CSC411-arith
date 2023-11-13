@@ -1,21 +1,25 @@
 use array2::Array2;
 use csc411_image;
 use csc411_image::{Read, Rgb, RgbImage};
-use csc411_rpegio::{debug_output_rpeg_data, output_rpeg_data};
+use csc411_arith::chroma_of_index;
+use csc411_rpegio::{debug_output_rpeg_data, output_rpeg_data, read_in_rpeg_data};
 use std::fs::File;
 use std::io::{self, Write};
 
 use crate::average_pbpr;
 use crate::bitpack;
+use crate::unpack_bits;
 use crate::get_luminosity_coeffs;
+use crate::reverse_luminosity_coeffs;
 use crate::pack_2x2_pixels;
 use crate::quantize::encode;
 use crate::quantize::scale_sat;
 use crate::quantize::smax;
-use crate::to_component_video::to_rgb;
+use crate::to_component_video::{to_rgb, YPbPr};
 use crate::to_component_video::to_ypbpr;
 use crate::to_rgb_float::to_rgbf32;
 use crate::trim_to_even_dimensions;
+use crate::compute_cv_byte;
 
 pub fn compress(filename: Option<&str>) {
     // Construct an Array2
@@ -77,9 +81,31 @@ pub fn compress(filename: Option<&str>) {
 
     let compressed_data: Vec<[u8; 4]> = empty_vec.into_iter().map(u32::to_be_bytes).collect();
 
-    debug_output_rpeg_data(&compressed_data, width as u32, height as u32);
+    output_rpeg_data(&compressed_data, width as u32, height as u32);
 }
 
+
 pub fn decompress(filename: Option<&str>) {
-    todo!();
+  let file = read_in_rpeg_data(filename);
+  let file = file.unwrap();
+
+  let width = file.1 as usize;
+  let height = file.2 as usize;
+
+  let mut arr: Array2<YPbPr> = Array2::blank_state(width, height, 0 as YPbPr);
+
+  for y in 0..4 {
+      for x in 0..4 {
+          let group_x = x / 2;
+          let group_y = y / 2;
+          let group = &data[group_y * 2 + group_x];
+          let pixel_x = x % 2;
+          let pixel_y = y % 2;
+          let pixel_position = pixel_y * 2 + pixel_x;
+          let transformed_value = compute_cv_byte(group[pixel_position], pixel_position as u8);
+          *arr.get_mut(x, y) = transformed_value;
+      }
+  }
+
+  // Now we have an array2 of ypbpr, continue on with decompression
 }

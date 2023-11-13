@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 pub struct Array2<T> {
     width: usize,
     height: usize,
@@ -5,9 +7,12 @@ pub struct Array2<T> {
 }
 
 impl<T: Clone> Array2<T> {
-    
     // Row Major constructor
-    pub fn from_row_major(width: usize, height: usize, elements: Vec<T>, ) -> Result<Self, &'static str> {
+    pub fn from_row_major(
+        width: usize,
+        height: usize,
+        elements: Vec<T>,
+    ) -> Result<Self, &'static str> {
         // ensure the board has valid number of elements
         if elements.len() != width * height {
             return Err("Invalid number of elements");
@@ -22,7 +27,7 @@ impl<T: Clone> Array2<T> {
             }
         }
 
-        // construct our instance of array2 with the width, height, and data vec 
+        // construct our instance of array2 with the width, height, and data vec
         Ok(Self {
             width,
             height,
@@ -31,7 +36,11 @@ impl<T: Clone> Array2<T> {
     }
 
     // Col-major constructor
-    pub fn from_col_major(width: usize, height: usize, elements: Vec<T>,) -> Result<Self, &'static str> {
+    pub fn from_col_major(
+        width: usize,
+        height: usize,
+        elements: Vec<T>,
+    ) -> Result<Self, &'static str> {
         // ensure the board has valid number of elements
         if elements.len() != width * height {
             return Err("Invalid number of elements");
@@ -46,7 +55,7 @@ impl<T: Clone> Array2<T> {
             }
         }
 
-        // construct our instance of array2 with the width, height, and vec 
+        // construct our instance of array2 with the width, height, and vec
         Ok(Self {
             width,
             height,
@@ -73,12 +82,12 @@ impl<T: Clone> Array2<T> {
     // iterates over the columns of data, skipping by the width to ensure column-major iteration
     pub fn iter_col_major(&self) -> impl Iterator<Item = (usize, usize, &T)> {
         (0..self.width)
-        .map(move |c| (c, self.data.iter().skip(c)))
-        .flat_map(move |(c, col)| {
-            col.step_by(self.width)
-            .enumerate()
-            .map(move |(r, val)| (c, r, val))
-        })
+            .map(move |c| (c, self.data.iter().skip(c)))
+            .flat_map(move |(c, col)| {
+                col.step_by(self.width)
+                    .enumerate()
+                    .map(move |(r, val)| (c, r, val))
+            })
     }
 
     // return element from a pair of coordinates
@@ -97,7 +106,7 @@ impl<T: Clone> Array2<T> {
     pub fn width(&self) -> usize {
         self.width
     }
-    
+
     // way to access height
     pub fn height(&self) -> usize {
         self.height

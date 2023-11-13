@@ -66,23 +66,18 @@ pub fn to_rgb(arr: &Array2<YPbPr>) -> Array2<Rgb> {
     let new_data: Vec<Rgb> = arr
     .iter_row_major()
     .map(|(_, _, element)| {
-        let r = element.y() as f32;
-        let g = element.pb() as f32;
-        let b = element.pr() as f32;
+        let y = element.y() as f32;
+        let pr = element.pb() as f32;
+        let pr = element.pr() as f32;
 
-        let red = (1.0 * r + 0.0 * g + 1.402 * b) * 255.0;
-        let green = (1.0 * r - 0.344136 * g - 0.714136 * b) * 255.0;
-        let blue = (1.0 * r + 1.772 * g + 0.0 * b) * 255.0;
-
-        let red2 = red as u16;
-        let green2 = green as u16;
-        let blue2 = blue as u16;
-
+        let red = (1.0 * y + 0.0 * pb + 1.402 * pr) * 255.0;
+        let green = (1.0 * y - 0.344136 * pb - 0.714136 * pr) * 255.0;
+        let blue = (1.0 * y + 1.772 * pb + 0.0 * pr) * 255.0;
         
         Rgb {
-            red: red2,
-            green: green2,
-            blue: blue2,
+            red,
+            green,
+            blue
         }
 
     })

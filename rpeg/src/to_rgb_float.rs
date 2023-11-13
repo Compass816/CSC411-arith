@@ -20,9 +20,6 @@ impl fmt::Display for RgbF32 {
     }
 }
 
-
-
-
 impl RgbF32 {
     pub fn new(red: f32, green: f32, blue: f32) -> Self {
         RgbF32 { red, green, blue }
@@ -58,7 +55,4 @@ pub fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
 
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
-
-
-
 
