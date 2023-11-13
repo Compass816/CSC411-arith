@@ -2,12 +2,13 @@ pub mod codec;
 pub mod to_rgb_float;
 pub mod to_component_video;
 pub mod quantize;
+pub mod bitpack;
 
 use array2::Array2;
 use csc411_image::Rgb;
 use to_component_video::YPbPr;
 use csc411_arith::{index_of_chroma, chroma_of_index};
-use bitpack::bitpack::{fitss, fitsu, news, newu, gets, getu};
+use bitpack::{fitss, fitsu, news, newu, gets, getu};
 
 pub fn trim_to_even_dimensions(arr: &Array2<Rgb>) -> Array2<Rgb> {
     let new_width = if arr.width() % 2 == 0 {
@@ -93,12 +94,12 @@ pub fn get_luminosity_coeffs(group: [[&YPbPr; 2]; 2]) -> (f32, f32, f32, f32) {
 }
 
 pub fn reverse_luminosity_coeffs(a: u32, b: i32, c: i32, d: i32) -> (u32, i32, i32, i32) {
-    let y1 = a - b as u32 - c as u32 + d as u32;
-    let y2 = a as u32 - b as u32 + c as u32 - d as u32;
-    let y3 = a as u32 + b as u32 - c as u32 - d as u32;
-    let y4 = a as u32 + b as u32 + c as u32 + d as u32;
+    let y1 = a as f32 - b as f32 - c as f32 + d as f32;
+    let y2 = a as f32 - b as f32 + c as f32 - d as f32;
+    let y3 = a as f32 + b as f32 - c as f32 - d as f32;
+    let y4 = a as f32 + b as f32 + c as f32 + d as f32;
 
-    (y1, y2 as i32, y3 as i32, y4 as i32)
+    (y1 as u32, y2 as i32, y3 as i32, y4 as i32)
 }
 
 
