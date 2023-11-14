@@ -12,7 +12,7 @@ pub struct YPbPr {
     pub pb: f32,
     pub pr: f32,
 }
-
+// function to display ypbpr
 impl fmt::Display for YPbPr {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
@@ -33,7 +33,7 @@ impl Default for YPbPr {
         }
     }
 }
-
+// constructor for ypbpr and getters for the 3 values 
 impl YPbPr {
     pub fn new(y: f32, pb: f32, pr: f32) -> Self {
         YPbPr { y, pb, pr }
@@ -51,7 +51,10 @@ impl YPbPr {
         self.pr
     }
 }
-
+/// Returns array2 of type ypbpr.
+/// 
+/// # Arguments:
+/// * An array2 of rgbf32
 pub fn to_ypbpr(arr: &Array2<RgbF32>) -> Array2<YPbPr> {
     let new_data: Vec<YPbPr> = arr
     .iter_row_major()
@@ -70,7 +73,10 @@ pub fn to_ypbpr(arr: &Array2<RgbF32>) -> Array2<YPbPr> {
 
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
-
+/// Returns array2 of rgbf32.
+/// 
+/// # Arguments:
+/// * array2 of ypbpr 
 
 pub fn from_ypbpr(arr: &Array2<YPbPr>) -> Array2<RgbF32> {
     let new_data: Vec<RgbF32> = arr
