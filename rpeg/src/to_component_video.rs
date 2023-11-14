@@ -51,7 +51,7 @@ impl YPbPr {
         self.pr
     }
 }
-/// Returns array2 of type ypbpr.
+/// Returns array2 of type ypbpr, used for compression
 /// 
 /// # Arguments:
 /// * An array2 of rgbf32
@@ -73,7 +73,7 @@ pub fn to_ypbpr(arr: &Array2<RgbF32>) -> Array2<YPbPr> {
 
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
-/// Returns array2 of rgbf32.
+/// Returns array2 of rgbf32, used for decompression
 /// 
 /// # Arguments:
 /// * array2 of ypbpr 
