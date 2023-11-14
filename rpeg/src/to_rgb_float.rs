@@ -19,7 +19,7 @@ impl fmt::Display for RgbF32 {
         )
     }
 }
-
+// constructor and getters to access the values of type rgbf32
 impl RgbF32 {
     pub fn new(red: f32, green: f32, blue: f32) -> Self {
         RgbF32 { red, green, blue }
@@ -38,6 +38,11 @@ impl RgbF32 {
     }
 }
 
+/// Returns array2 of type rgbf32, used for compression
+/// 
+/// # Arguments:
+/// * array2 of type rgb
+
 pub fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
     let new_data: Vec<RgbF32> = arr
     .iter_row_major()
@@ -55,7 +60,10 @@ pub fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
 
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
-
+/// Returns array2 of type rgb, used for decompression
+/// 
+/// # Arguments:
+/// * array2 of type rgbf32
 pub fn from_rgb32(arr: &Array2<RgbF32>) -> Array2<Rgb> {
     let new_data: Vec<Rgb> = arr
     .iter_row_major()
