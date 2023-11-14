@@ -56,3 +56,21 @@ pub fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
 
+pub fn from_rgb32(arr: &Array2<RgbF32>) -> Array2<Rgb> {
+    let new_data: Vec<Rgb> = arr
+    .iter_row_major()
+    .map(|(_, _, element)| {
+        let r = element.red * 255.0;
+        let g = element.green * 255.0;
+        let b = element.blue * 255.0;
+        Rgb {
+            red: r as u16,
+            green: g as u16,
+            blue: b as u16,
+        }
+    })
+    .collect();
+
+    return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
+}
+

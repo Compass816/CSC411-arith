@@ -1,7 +1,7 @@
 pub struct Array2<T> {
-    width: usize,
-    height: usize,
-    data: Vec<T>,
+    pub width: usize,
+    pub height: usize,
+    pub data: Vec<T>,
 }
 
 impl<T: Clone> Array2<T> {
