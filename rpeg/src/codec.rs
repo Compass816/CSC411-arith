@@ -5,16 +5,19 @@ use csc411_rpegio::{output_rpeg_data, input_rpeg_data};
 
 use crate::{bitpack, pack_2x2_elements, unpack_2x2_pixels};
 //use crate::compute_cv_byte;
-use crate::quantize::encode;
+use crate::quantize::{encodes, encodeu};
 use crate::to_component_video::to_ypbpr;
-use crate::to_component_video::{from_ypbpr, YPbPr};
+use crate::to_component_video::{from_ypbpr};
 use crate::to_rgb_float::{to_rgbf32, from_rgb32};
 use crate::trim_to_even_dimensions;
 
 use crate::unpack_bits;
-use crate::chroma_of_index;
-use crate::reverse_luminosity_coeffs;
 
+/// Performs all functions to compress an image, including trimming the image, converting to RgbF32, then to component video,
+/// then packing the pixels into 2x2 groups, quantizing, and then bitpacking.
+/// 
+/// # Arguments:
+/// * `filename`: an option &str that is the filename of the ppm image to compress
 pub fn compress(filename: Option<&str>) {
     // Construct an Array2
     let img = RgbImage::read(filename).unwrap();
@@ -34,41 +37,24 @@ pub fn compress(filename: Option<&str>) {
 
     // testing to see if float values are printed (they are)
 
-    // let check3 = to_rgb(&arr_cv);
-    //  set array to 2x2 pixels and values we need
-    let check4 = pack_2x2_elements(arr_cv);
-
-    //  for (x, y, &ref element) in check3.iter_row_major() {
-    //       println!("{}, {}, : {:?}", x, y, element);
-    //    }
-
-    /*    for (x, y, &ref element) in check4.iter_row_major() {
-
-               let mut modified_element = element.clone();
-
-               modified_element.0 = encode(element.0, 9, 0.3) as f32;
-               modified_element.1 = encode(element.1, 5, 0.3) as f32;
-               modified_element.2 = encode(element.2, 5, 0.3) as f32;
-               modified_element.3 = encode(element.3, 5, 0.3) as f32;
-
-               println!("{}, {}, : {:?}", x, y, modified_element);
-        }
-    */
+    // set array to 2x2 pixels and values we need
+    let packed_arr = pack_2x2_elements(arr_cv);
 
     let mut empty_vec = vec![];
-    //println!("Before println");
-    for (x, y, &ref element) in check4.iter_row_major() {
-        let qa = encode(element.0, 9, 0.3) as u32;
-        let qb = encode(element.1 * 100.0, 5, 0.3) as i32;
-        let qc = encode(element.2, 5, 0.3) as i32;
-        let qd = encode(element.3, 5, 0.3) as i32;
-        //println!("Line, {}, {}", element.1, qb);
+    for (_x, _y, &ref element) in packed_arr.iter_row_major() {
+        let qa = encodeu(element.0, 9, 0.3);
+        let qb = encodes(element.1, 5, 0.3);
+        let qc = encodes(element.2, 5, 0.3);
+        let qd = encodes(element.3, 5, 0.3);
+
+        /*println!(
+            "{}, {}, {}, {}, {}, {}, {}, {}",
+            element.0, qa, element.1, qb, element.2, qc, element.3, qd
+        );*/
 
         let test = bitpack(qa, qb, qc, qd, element.4 as u32, element.5 as u32).unwrap();
         empty_vec.push(test);
-
     }
-
 
     let compressed_data: Vec<[u8; 4]> = empty_vec.into_iter().map(u32::to_be_bytes).collect();
 
@@ -76,6 +62,10 @@ pub fn compress(filename: Option<&str>) {
 }
 
 
+/// Performs all functions to decompress an image, including unpacking the Array2, converting to component video, and then to RGB.
+/// 
+/// # Arguments:
+/// * `filename`: an option &str that is the filename of the rpeg compressed data to decompress
 pub fn decompress(filename: Option<&str>) {
     let file = input_rpeg_data(filename);
     let file = file.unwrap();
@@ -98,7 +88,14 @@ pub fn decompress(filename: Option<&str>) {
 
     let unpacked_arr = unpack_2x2_pixels(decompressed_arr);
     let returned_cv_arr = from_ypbpr(&unpacked_arr);
+
     let returned_float_arr = from_rgb32(&returned_cv_arr);
+
+    for (x, y, &ref element) in returned_cv_arr.iter_row_major() {
+        let modified_element = element.clone();
+
+        println!("{}, {}, {}", modified_element.red, modified_element.green, modified_element.blue);
+    }
 
     let image = from_array2(&returned_float_arr);
     let _ = RgbImage::write(&image, None);
@@ -113,8 +110,6 @@ pub fn decompress(filename: Option<&str>) {
         println!("{}, {}, : {:?}", x, y, modified_element);
     }*/
 
-    //let image = from_array2(&arr_rgb);
-    //let _ = RgbImage::write(&image, None);
 }
 
 fn from_array2(arr: &Array2<Rgb>) -> RgbImage {

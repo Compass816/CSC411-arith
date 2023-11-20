@@ -41,15 +41,14 @@ impl RgbF32 {
 /// Returns array2 of type rgbf32, used for compression
 /// 
 /// # Arguments:
-/// * array2 of type rgb
-
+/// * array2 of type rg
 pub fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
     let new_data: Vec<RgbF32> = arr
     .iter_row_major()
     .map(|(_, _, element)| {
-        let r = element.red as f32 / 255 as f32;
-        let g = element.green as f32 / 255 as f32;
-        let b = element.blue as f32 / 255 as f32;
+        let r = element.red as f32 / 255.0;
+        let g = element.green as f32 / 255.0;
+        let b = element.blue as f32 / 255.0;
         RgbF32 {
             red: r,
             green: g,
@@ -60,6 +59,7 @@ pub fn to_rgbf32(arr: &Array2<Rgb>) -> Array2<RgbF32> {
 
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
+
 /// Returns array2 of type rgb, used for decompression
 /// 
 /// # Arguments:
@@ -81,4 +81,3 @@ pub fn from_rgb32(arr: &Array2<RgbF32>) -> Array2<Rgb> {
 
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
-

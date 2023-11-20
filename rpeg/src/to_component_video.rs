@@ -33,6 +33,7 @@ impl Default for YPbPr {
         }
     }
 }
+
 // constructor for ypbpr and getters for the 3 values 
 impl YPbPr {
     pub fn new(y: f32, pb: f32, pr: f32) -> Self {
@@ -51,6 +52,7 @@ impl YPbPr {
         self.pr
     }
 }
+
 /// Returns array2 of type ypbpr, used for compression
 /// 
 /// # Arguments:
@@ -73,11 +75,11 @@ pub fn to_ypbpr(arr: &Array2<RgbF32>) -> Array2<YPbPr> {
 
     return Array2::from_row_major(arr.width(), arr.height(), new_data).unwrap();
 }
+
 /// Returns array2 of rgbf32, used for decompression
 /// 
 /// # Arguments:
 /// * array2 of ypbpr 
-
 pub fn from_ypbpr(arr: &Array2<YPbPr>) -> Array2<RgbF32> {
     let new_data: Vec<RgbF32> = arr
     .iter_row_major()
